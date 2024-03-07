@@ -1,3 +1,4 @@
+"use client";
 import {
   Card,
   CardContent,
@@ -7,14 +8,16 @@ import {
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatRelative } from "date-fns";
+import { useState } from "react";
 
 import { Doc } from "../../../../convex/_generated/dataModel";
-import { FileTextIcon, GanttChartIcon, ImageIcon } from "lucide-react";
+import { FileTextIcon, GanttChartIcon, ImageIcon,X } from "lucide-react";
 import { ReactNode } from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import Image from "next/image";
 import { FileCardActions, getFileUrl } from "./file-actions";
+import { useToast } from "@/components/ui/use-toast";
 
 export function FileCard({
   file,
@@ -24,15 +27,30 @@ export function FileCard({
   const userProfile = useQuery(api.users.getUserProfile, {
     userId: file.userId,
   });
-
+  
   const typeIcons = {
     image: <ImageIcon />,
     pdf: <FileTextIcon />,
     csv: <GanttChartIcon />,
   } as Record<Doc<"files">["type"], ReactNode>;
-
+  const [isImageOpen, setIsImageOpen] = useState(false);
+  const { toast } = useToast();
   return (
-    <Card className="flex-col">
+    <Card className="flex-col cursor-pointer">
+      {isImageOpen && (
+        <div className="absolute h-full w-full top-0 bottom-0 right-0 left-0 backdrop-blur-xl z-[1000]
+        flex justify-center item-center  border-2">
+        <X onClick={() => setIsImageOpen(false)} className="absolute top-0 right-0 w-10 h-10 cursor-pointer" />
+          <img
+          onClick={() => setIsImageOpen(true)}
+            alt={file.name}
+            className="  aspect-auto mx-auto"
+            src={getFileUrl(file.fileId)}
+          />
+
+
+        </div>
+      )}
       <CardHeader className="relative">
         <CardTitle className="flex gap-2 text-base font-normal">
           <div className="flex justify-center">{typeIcons[file.type]}</div>
@@ -42,23 +60,36 @@ export function FileCard({
           <FileCardActions isFavorited={file.isFavorited} file={file} />
         </div>
       </CardHeader>
-      <CardContent className="flex justify-center items-center h-[175px]">
+      <CardContent className="flex justify-center items-center h-[200px]">
         {file.type === "image" && (
           <Image
-            width="100"
-            height="100"
+          onClick={() => setIsImageOpen(true)}
+            width="1000"
+            height="300"
             alt={file.name}
-            className="w-full h-full object-cover aspect-square sm:max-w-[120px] sm:max-h-[120px]"
+            className="w-full h-full object-cover aspect-square"
             src={getFileUrl(file.fileId)}
           />
         )}
 
         {file.type === "csv" && (
-          <GanttChartIcon className="w-full h-full sm:w-[60px] sm:h-[60px]" />
+          <GanttChartIcon onClick={()=>{
+              toast({
+                  variant: "destructive",
+                  title: "No support",
+                  description: "Currently we do not support viewing these file types",
+                });
+          }} className="w-full h-full sm:w-[60px] sm:h-[60px]" />
         )}
 
         {file.type === "pdf" && (
-          <FileTextIcon className="w-full h-full sm:w-[60px] sm:h-[60px]" />
+          <FileTextIcon onClick={()=>{
+              toast({
+                  variant: "destructive",
+                  title: "No support",
+                  description: "Currently we do not support viewing these file types",
+                });
+          }} className="w-full h-full sm:w-[60px] sm:h-[60px]" />
         )}
       </CardContent>
 

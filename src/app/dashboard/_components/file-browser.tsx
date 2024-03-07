@@ -133,8 +133,8 @@ export function FileBrowser({
           </div>
         )}
 
-        <TabsContent value="grid">
-          <div className="flex flex-col md:flex-row flex-wrap gap-2 ">
+        <TabsContent value="grid" >
+          <div className="flex flex-col md:flex-row flex-wrap gap-2">
             {modifiedFiles?.map((file) => {
               return <FileCard key={file._id} file={file} />;
             })}
