@@ -49,7 +49,9 @@ export function SearchBar({
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input {...field} placeholder="your file names" />
+                  <Input{...field}
+                    placeholder="your file names"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -60,12 +62,12 @@ export function SearchBar({
             size="sm"
             type="submit"
             disabled={form.formState.isSubmitting}
-            className="flex gap-1"
+            className="flex gap-1 mr-2"
           >
             {form.formState.isSubmitting && (
               <Loader2 className="h-4 w-4 animate-spin" />
             )}
-            <SearchIcon /> Search
+            <SearchIcon /> <span className="hidden md:block">Search</span>
           </Button>
         </form>
       </Form>

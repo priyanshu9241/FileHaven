@@ -84,12 +84,13 @@ export function FileBrowser({
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-4xl font-bold">{title}</h1>
+      <div className="flex justify-between items-center mb-8 flex-wrap">
+        <h1 className="text-4xl font-bold mb-2">{title}</h1>
 
-        <SearchBar query={query} setQuery={setQuery} />
-
-        <UploadButton />
+        <div className="flex md:w-auto w-full justify-between md:justify-normal">
+          <SearchBar query={query} setQuery={setQuery} />
+          <UploadButton />
+        </div>
       </div>
 
       <Tabs defaultValue="grid">
@@ -104,8 +105,8 @@ export function FileBrowser({
             </TabsTrigger>
           </TabsList>
 
-          <div className="flex gap-2 items-center">
-            <Label htmlFor="type-select">Type Filter</Label>
+          <div className="flex gap-2 items-center ml-2 md:ml-0 -mt-2">
+            <Label className="hidden md:flex" htmlFor="type-select">Type Filter</Label>
             <Select
               value={type}
               onValueChange={(newType) => {
@@ -133,7 +134,7 @@ export function FileBrowser({
         )}
 
         <TabsContent value="grid">
-          <div className="grid grid-cols-3 gap-4">
+          <div className="flex flex-col md:flex-row flex-wrap gap-2 ">
             {modifiedFiles?.map((file) => {
               return <FileCard key={file._id} file={file} />;
             })}

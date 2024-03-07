@@ -32,30 +32,37 @@ export function FileCard({
   } as Record<Doc<"files">["type"], ReactNode>;
 
   return (
-    <Card>
+    <Card className="flex-col">
       <CardHeader className="relative">
         <CardTitle className="flex gap-2 text-base font-normal">
-          <div className="flex justify-center">{typeIcons[file.type]}</div>{" "}
+          <div className="flex justify-center">{typeIcons[file.type]}</div>
           {file.name}
         </CardTitle>
         <div className="absolute top-2 right-2">
           <FileCardActions isFavorited={file.isFavorited} file={file} />
         </div>
       </CardHeader>
-      <CardContent className="h-[200px] flex justify-center items-center">
+      <CardContent className="flex justify-center items-center h-[175px]">
         {file.type === "image" && (
           <Image
-            alt={file.name}
-            width="200"
+            width="100"
             height="100"
+            alt={file.name}
+            className="w-full h-full object-cover aspect-square sm:max-w-[120px] sm:max-h-[120px]"
             src={getFileUrl(file.fileId)}
           />
         )}
 
-        {file.type === "csv" && <GanttChartIcon className="w-20 h-20" />}
-        {file.type === "pdf" && <FileTextIcon className="w-20 h-20" />}
+        {file.type === "csv" && (
+          <GanttChartIcon className="w-full h-full sm:w-[60px] sm:h-[60px]" />
+        )}
+
+        {file.type === "pdf" && (
+          <FileTextIcon className="w-full h-full sm:w-[60px] sm:h-[60px]" />
+        )}
       </CardContent>
-      <CardFooter className="flex justify-between">
+
+      <CardFooter className="flex justify-between flex-wrap">
         <div className="flex gap-2 text-xs text-gray-700 w-40 items-center">
           <Avatar className="w-6 h-6">
             <AvatarImage src={userProfile?.image} />

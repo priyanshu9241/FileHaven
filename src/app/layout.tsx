@@ -24,6 +24,7 @@ export default function RootLayout({
         <ConvexClientProvider>
           <Toaster />
           <Header />
+          {process.env.CLERK_HOSTNAME}
           {children}
           <Footer />
         </ConvexClientProvider>
