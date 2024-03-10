@@ -38,8 +38,8 @@ export function FileCard({
   return (
     <Card className="flex-col cursor-pointer">
       {isImageOpen && (
-        <div className="absolute h-full w-full top-0 bottom-0 right-0 left-0 backdrop-blur-xl z-[1000]
-        flex justify-center item-center  border-2">
+        <div className="absolute h-full my-auto w-full top-0 bottom-0 right-0 left-0 backdrop-blur-xl z-[1000]
+        flex justify-center item-center">
         <X onClick={() => setIsImageOpen(false)} className="absolute top-0 right-0 w-10 h-10 cursor-pointer" />
           <img
           onClick={() => setIsImageOpen(true)}
