@@ -26,7 +26,7 @@ import { z } from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { Loader2 } from "lucide-react";
 import { Doc } from "../../../../convex/_generated/dataModel";
@@ -69,9 +69,18 @@ export function UploadButton() {
     const { storageId } = await result.json();
 
     const types = {
+      "image/jpeg": "image",
       "image/png": "image",
+      "image/gif": "image",
+      "image/webp": "image",
       "application/pdf": "pdf",
       "text/csv": "csv",
+      "video/mp4": "video",
+      "video/webm": "video",
+      "video/ogg": "video",
+      "video/quicktime": "video",
+      "video/x-msvideo": "video",
+      "video/x-ms-wmv": "video",
     } as Record<string, Doc<"files">["type"]>;
 
     try {
@@ -108,7 +117,6 @@ export function UploadButton() {
   const [isFileDialogOpen, setIsFileDialogOpen] = useState(false);
 
   const createFile = useMutation(api.files.createFile);
-
   return (
     <Dialog
       open={isFileDialogOpen}
@@ -152,7 +160,16 @@ export function UploadButton() {
                   <FormItem>
                     <FormLabel>File</FormLabel>
                     <FormControl>
-                      <Input type="file" {...fileRef} />
+                      <Input
+                        type="file"
+                        {...fileRef}
+                        onChange={(e) => {
+                          fileRef.onChange(e);
+                          if (e.target?.files && e.target?.files.length > 0) {
+                            form.setValue("title", e.target.files[0].name);
+                          }
+                        }}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

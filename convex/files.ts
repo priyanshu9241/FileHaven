@@ -130,7 +130,12 @@ export const getFiles = query({
     return files;
   },
 });
-
+export const getFileUrl = query({
+  args: { storageId: v.id("_storage") },
+  async handler(ctx, args) {
+    return await ctx.storage.getUrl(args.storageId);
+  },
+});
 export const deleteAllFiles = internalMutation({
   args: {},
   async handler(ctx) {

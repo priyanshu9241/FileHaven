@@ -11,12 +11,20 @@ import { formatRelative } from "date-fns";
 import { useState } from "react";
 
 import { Doc } from "../../../../convex/_generated/dataModel";
-import { FileTextIcon, GanttChartIcon, ImageIcon, X } from "lucide-react";
+import {
+  FileTextIcon,
+  GanttChartIcon,
+  ImageIcon,
+  X,
+  FileVideo,
+  File,
+} from "lucide-react";
 import { ReactNode } from "react";
 import { useQuery } from "convex/react";
+import { useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import Image from "next/image";
-import { FileCardActions, getFileUrl } from "./file-actions";
+import { FileCardActions } from "./file-actions";
 import { useToast } from "@/components/ui/use-toast";
 export function FileCard({
   file,
@@ -29,15 +37,17 @@ export function FileCard({
 
   const typeIcons = {
     image: <ImageIcon />,
-
     pdf: <FileTextIcon />,
-
     csv: <GanttChartIcon />,
+    video: <FileVideo />,
+    file: <File />,
   } as Record<Doc<"files">["type"], ReactNode>;
 
   const [isImageOpen, setIsImageOpen] = useState(false);
   const { toast } = useToast();
-  const fileUrl = getFileUrl(file.fileId);
+  const fileUrl = useQuery(api.files.getFileUrl, {
+    storageId: file.fileId,
+  }) as string;
 
   return (
     <Card className="flex-col cursor-pointer">
@@ -82,6 +92,37 @@ export function FileCard({
 
         {file.type === "csv" && (
           <GanttChartIcon
+            onClick={() => {
+              toast({
+                variant: "destructive",
+
+                title: "No support",
+
+                description:
+                  "Currently we do not support viewing these file types",
+              });
+            }}
+            className="w-full h-full sm:w-[60px] sm:h-[60px]"
+          />
+        )}
+
+        {file.type === "video" && (
+          <FileVideo
+            onClick={() => {
+              toast({
+                variant: "destructive",
+
+                title: "No support",
+
+                description:
+                  "Currently we do not support viewing these file types",
+              });
+            }}
+            className="w-full h-full sm:w-[60px] sm:h-[60px]"
+          />
+        )}
+        {file.type === "file" && (
+          <File
             onClick={() => {
               toast({
                 variant: "destructive",
